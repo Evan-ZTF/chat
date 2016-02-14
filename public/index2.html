@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <title>在线聊天室</title>
+    <!-- <base href="http://119.29.4.88:3003/"/> -->
+    <link href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="./assets/style/bootstrap.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="./assets/style/app.css"/>
+    <!-- <script src="./assets/js/jquery.min.js"></script> -->
+    <script src="http://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./assets/js/angular.min.js"></script>
+    <script src="./assets/js/app.js"></script>
+
+</head>
+<body ng-app="chatRoom" ng-controller="chatCtrl">
+
+<!-- chat room -->
+
+<div class="chat-room-wrapper" ng-show="hasLogined" style='width: 100%;'  >
+    <div class="online panel" id="userInterface">
+        <div class="panel-heading">
+            <h3 class="panel-title">在线<span class="user-number">{{users.length-1}}</span></h3>
+        </div>
+        <div class="user-wrapper panel-body">
+            <user iscurrentreceiver="receiver===user.nickname" info="user" ng-click="setReceiver(user.nickname)" ng-repeat="user in users"></user>
+        </div>
+    </div>
+
+    <div class="chat-room panel"  id="meInterface">
+        <div class="panel-heading">
+           <h3 class="panel-title"> <span style='float: left;line-height: 25px;'  ng-click='toggle()'><a href="" class="icon-back"></a>返回</span></h3>
+        </div>
+        <div class="user-wrapper panel-body">
+           <div style='width:100%;height: 80px;position: relative;margin-top:20px'>
+                <img src="" alt="" style='height: 65px;width:65px;;position: absolute;top:50%;-webkit-transform: translateY(-50%);transform: translateY(-50%);left:10px;'>
+                <span style="position: absolute;left:90px;font-size:18px;margin-top:10px;">{{nickname}}</span>
+           </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="chat-room panel" style="width: 100%;" id="messageInterface">
+        <div class="panel-heading">
+            <h3 class="panel-title"> <span style='float: left;line-height: 22px;'  ng-click='toggle()'><a href="" class="icon-back"></a>返回</span></h3>
+            <span style='position: absolute;left:50%;-webkit-transform: translateX(-50%);transform: translateX(-50%);color:white;font-weight: 500;'>{{receiver?receiver:"群聊"}}</span>
+            <!-- <h3 class="panel-title" style='text-align: center;'>{{receiver?receiver:"群聊"}}</h3> -->
+        </div>
+        <div class="message-wrapper panel-body">
+                <message self="nickname" scrolltothis="scrollToBottom()" info="message" ng-repeat="message in messages"></message>
+        </div>
+        <div class="panel-footer">
+            <form class="post-form form-inline" novalidate name="postform" ng-submit="postMessage()">
+                <input type="text" class="form-control" ng-model="words" placeholder="说点什么呗" required id="messageInput">
+                <button type="submit" class="btn btn-success btn-send" ng-disabled="postform.$invalid" >发送</button>
+            </form>
+        </div>
+    </div>
+
+
+  <div class="footer">
+    <a ng-click='chatShow()' class="active">
+        <i class="icon-wechat"></i>列表
+    </a>
+    <a ng-click='messageShow()'>
+        <i class="icon-contacts" ></i>聊天
+    </a>
+
+    <a ng-click='meShow()'>
+        <i class="icon-mes"></i>我
+    </a>
+</div>
+</div>
+
+
+<!-- end of chat room -->
+
+<!-- login form -->
+<div class="userform-wrapper"  ng-show="!hasLogined" style="display:none">
+<h1 style='margin: 0;color: white;position: absolute;top:28%;left:50%;-webkit-transform: translateX(-50%);transform: translateX(-50%);'>CkChat</h1>
+    <form class="form-inline login" novalidate name="userform" ng-submit="login()" id="form1">
+
+        <div class="form-group">
+            <label for="nickname" class="sr-only"></label>
+            <div class="input-group" id="submitGroup">
+                <div class="input-group-addon"><span class="glyphicon glyphicon-user"></span></div>
+                <input type="text" class="form-control" id="nickname" placeholder="请输入昵称" ng-model="nickname" required/>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary" ng-disabled="userform.$invalid">登陆</button>
+        <p ng-show="userExisted" class="help-block">昵称已存在</p>
+
+    </form>
+</div>
+<!-- end of login form -->
+
+
+
+
+
+</body>
+</html>

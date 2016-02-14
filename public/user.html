@@ -1,0 +1,4 @@
+<div class="user">
+<span class="avatar" style="background:url({{info.userImg?info.userImg:info.img}});background-size:contain;"></span><span class="nickname">{{info.nickname?info.nickname:"群聊"}}</span>
+    <span class="unread" ng-show="info.hasNewMessage&&!iscurrentreceiver">[未读]</span>
+</div>
